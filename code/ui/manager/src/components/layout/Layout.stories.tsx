@@ -63,13 +63,7 @@ const meta = {
     theme: 'light',
     layout: 'fullscreen',
   },
-  decorators: [
-    (Story) => (
-      <div style={{ height: '100vh', width: '100vw' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: [(Story) => <Story />],
 } satisfies Meta<typeof Layout>;
 
 export default meta;

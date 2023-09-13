@@ -4,6 +4,7 @@ import { styled } from '@storybook/theming';
 import { useUpstreamState } from '../../hooks';
 import type { Props, LayoutState } from './Layout.types';
 import { useDragging } from './Layout.DesktopControls';
+import { useMediaQuery } from '../hooks/useMedia';
 
 const createReducer =
   (persistence: Props['persistence'], setState: Props['setState']) =>
@@ -39,6 +40,12 @@ const createReducer =
   };
 
 export const Layout = ({ state: incomingState, persistence, setState, ...slots }: Props) => {
+  const breakpoint = '(min-width: 600px)';
+  const isDesktop = useMediaQuery(breakpoint);
+  const isMobile = !isDesktop;
+
+  console.log(isMobile);
+  // const isMobile = !isDesktop;
   const [state, updateState] = useReducer<Reducer<LayoutState, Partial<LayoutState>>>(
     createReducer(persistence, setState),
     {
@@ -71,54 +78,60 @@ export const Layout = ({ state: incomingState, persistence, setState, ...slots }
   const showPanel = state.viewMode === 'story';
 
   return (
-    <>
-      <LayoutContainer {...state}>
-        {showPages && <PagesContainer>{slots.slotPages}</PagesContainer>}
-        <ContentContainer>{slots.slotMain}</ContentContainer>
-        <SidebarContainer>
-          <Drag ref={sidebarResizerRef} />
-          {slots.slotSidebar}
-        </SidebarContainer>
-        {showPanel && (
-          <>
-            <PanelContainer position={state.panelPosition}>
-              <Drag
-                orientation={state.panelPosition === 'bottom' ? 'horizontal' : 'vertical'}
-                position={state.panelPosition === 'bottom' ? 'left' : 'right'}
-                ref={panelResizerRef}
-              />
-              {slots.slotPanel}
-            </PanelContainer>
-          </>
-        )}
-      </LayoutContainer>
-    </>
+    <LayoutContainer {...state} breakpoint={breakpoint}>
+      {showPages && <PagesContainer>{slots.slotPages}</PagesContainer>}
+      <ContentContainer>{slots.slotMain}</ContentContainer>
+      {isDesktop && (
+        <>
+          <SidebarContainer>
+            <Drag ref={sidebarResizerRef} />
+            {slots.slotSidebar}
+          </SidebarContainer>
+          {showPanel && (
+            <>
+              <PanelContainer position={state.panelPosition}>
+                <Drag
+                  orientation={state.panelPosition === 'bottom' ? 'horizontal' : 'vertical'}
+                  position={state.panelPosition === 'bottom' ? 'left' : 'right'}
+                  ref={panelResizerRef}
+                />
+                {slots.slotPanel}
+              </PanelContainer>
+            </>
+          )}
+        </>
+      )}
+      {isMobile && <></>}
+    </LayoutContainer>
   );
 };
 
-const LayoutContainer = styled.div<LayoutState>(
-  ({ sidebarWidth, panelWidth, panelHeight, viewMode, panelPosition }) => {
+const LayoutContainer = styled.div<LayoutState & { breakpoint: string }>(
+  ({ sidebarWidth, panelWidth, panelHeight, viewMode, panelPosition, breakpoint }) => {
     return {
-      width: '100%',
-      height: '100%',
-      display: 'grid',
+      width: '100vw',
+      height: '100lvh',
       overflow: 'hidden',
-      gap: 0,
-      gridTemplateColumns: `${sidebarWidth}% 1fr ${panelWidth}% [right]`,
-      gridTemplateRows: `[top] 1fr ${panelHeight}% [bottom]`,
-      gridTemplateAreas: (() => {
-        if (viewMode === 'docs') {
-          // remove panel in docs viewMode
-          return `"sidebar content content"
+
+      [`@media ${breakpoint}`]: {
+        display: 'grid',
+        gap: 0,
+        gridTemplateColumns: `${sidebarWidth}% 1fr ${panelWidth}% [right]`,
+        gridTemplateRows: `[top] 1fr ${panelHeight}% [bottom]`,
+        gridTemplateAreas: (() => {
+          if (viewMode === 'docs') {
+            // remove panel in docs viewMode
+            return `"sidebar content content"
                   "sidebar content content"`;
-        }
-        if (panelPosition === 'right') {
-          return `"sidebar content panel"
+          }
+          if (panelPosition === 'right') {
+            return `"sidebar content panel"
                   "sidebar content panel"`;
-        }
-        return `"sidebar content content content"
+          }
+          return `"sidebar content content content"
                 "sidebar panel   panel   panel"`;
-      })(),
+        })(),
+      },
     };
   }
 );
@@ -131,10 +144,11 @@ const SidebarContainer = styled.div(({ theme }) => ({
 }));
 
 const ContentContainer = styled.div(({ theme }) => ({
-  display: 'grid',
-  position: 'relative',
-  backgroundColor: theme.background.content,
+  width: '100%',
+  height: '100%',
   gridArea: 'content',
+  // backgroundColor: theme.background.content,
+  backgroundColor: 'red',
 }));
 
 const PagesContainer = styled.div(({ theme }) => ({
