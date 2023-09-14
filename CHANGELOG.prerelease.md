@@ -1,3 +1,14 @@
+## 7.5.0-alpha.3
+
+- Build: Upgrade chromatic bin package - [#24133](https://github.com/storybookjs/storybook/pull/24133), thanks [@ndelangen](https://github.com/ndelangen)!
+- Indexer: Rename `index` to `createIndex` - [#24075](https://github.com/storybookjs/storybook/pull/24075), thanks [@JReinhold](https://github.com/JReinhold)!
+- Maintenance: Regen lockfiles - [#24152](https://github.com/storybookjs/storybook/pull/24152), thanks [@ndelangen](https://github.com/ndelangen)!
+- Theming: Add `barHoverColor` - [#20169](https://github.com/storybookjs/storybook/pull/20169), thanks [@julien-deramond](https://github.com/julien-deramond)!
+- Types: Don't distribute generic type of Meta and Story - [#24110](https://github.com/storybookjs/storybook/pull/24110), thanks [@kasperpeulen](https://github.com/kasperpeulen)!
+- UI: Fix SVG override fill when path has a fill attribute - [#24156](https://github.com/storybookjs/storybook/pull/24156), thanks [@ndelangen](https://github.com/ndelangen)!
+- UI: Fix TreeNode alignment when using a different font - [#22221](https://github.com/storybookjs/storybook/pull/22221), thanks [@bdriguesdev](https://github.com/bdriguesdev)!
+- UI: Improve look and feel of status UI in sidebar - [#24099](https://github.com/storybookjs/storybook/pull/24099), thanks [@ndelangen](https://github.com/ndelangen)!
+
 ## 7.5.0-alpha.2
 
 - Angular: Categorize legacy build options error - [#24014](https://github.com/storybookjs/storybook/pull/24014), thanks [@yannbf](https://github.com/yannbf)!
